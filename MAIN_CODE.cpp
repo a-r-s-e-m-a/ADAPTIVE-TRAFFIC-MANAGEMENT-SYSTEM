@@ -266,4 +266,61 @@ int total_vehicles()
 
     return total;
 }
+void show_status()
+{
+    cout << "\n--- DASHBOARD ---\n";
 
+    for(int i = 0; i < 4; i++)
+    {
+        cout << lane_names[i]
+             << " | Vehicles: " << vehicle_counts[i]
+             << " | Wait: " << wait_times[i] << "\n";
+    }
+}
+
+void show_decision(int lane)
+{
+    cout << "\n--- DECISION BREAKDOWN ---\n";
+
+    for(int i = 0; i < 4; i++)
+    {
+        cout << lane_names[i]
+             << " | Vehicles: " << vehicle_counts[i]
+             << " | Wait: " << wait_times[i];
+
+        if(i == lane)
+            cout << " <-- SELECTED";
+
+        cout << "\n";
+    }
+
+    cout << "\nSELECTED: " << lane_names[lane] << "\n";
+}
+
+int performance_score()
+{
+    int total = 0;
+
+    for(int i = 0; i < 4; i++)
+        total += vehicle_counts[i];
+
+    int score = 100 - (total / 10);
+
+    if(score < 0)
+        score = 0;
+
+    return score;
+}
+
+int callback(void*, int col, char** data, char** colName)
+{
+    for(int i = 0; i < col; i++)
+    {
+        cout << colName[i] << ": "
+             << (data[i] ? data[i] : "0")
+             << " | ";
+    }
+
+    cout << endl;
+    return 0;
+}
