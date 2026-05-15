@@ -10,7 +10,8 @@ BEREKET DERESE - ETS 0262/17
   CONTRIBUTION: Lane Processing and Wait Time  Management- manages traffic lane data by updating vehicle counts, tracking wait times, checking empty lanes, 
                 and calculating total vehicles for efficient traffic control.
 AFOMIYA ASCHENAKI — ETS 0111/17
-  CONTRIBUTION: TRAFFIC INPUT & EMERGENCY MANAGEMENT
+  CONTRIBUTION: Implemented Traffic Input & Emergency Management by handling vehicle input updates, detecting emergency vehicles, 
+               and controlling traffic priority to improve traffic flow efficiency.
    
 Mading Majok -ETS 1876/17
  CONTRIBUTION: I integrated SQLite into the C++ traffic system, designed lane data structures, and implemented synchronization functions to keep data consistent. 
