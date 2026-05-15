@@ -13,12 +13,17 @@ AFOMIYA ASCHENAKI — ETS 0111/17
   CONTRIBUTION: Implemented Traffic Input & Emergency Management by handling vehicle input updates, detecting emergency vehicles, 
                and controlling traffic priority to improve traffic flow efficiency.
    
-Mading Majok -ETS 1876/17
- CONTRIBUTION: I integrated SQLite into the C++ traffic system, designed lane data structures, and implemented synchronization functions to keep data consistent. 
+MADING MAJOK    -   ETS 1876/17
+  CONTRIBUTION: I integrated SQLite into the C++ traffic system, designed lane data structures, and implemented synchronization functions to keep data consistent. 
                I also created the database schema for logging traffic states and added emergency and cycle tracking features to enhance traffic control.
 
-Betelhem Nurlachw  -ETS 0284/17
-CONTRIBUTION: Implemented all data logging — saves and loads live lane state to the database between cycles, inserts every traffic decision into the permanent
+BETELHEM NURLACHEW  - ETS 0284/17
+  CONTRIBUTION: Implemented all data logging — saves and loads live lane state to the database between cycles, inserts every traffic decision into the permanent
              log with lane, vehicles, wait time, green time, and event type, and writes each cycle summary to an external text file for offline review.
+
+AKSAH ATLAW   -  ETS0121/17
+  CONTRIBUTION: I developed the traffic monitoring and analytics module of the Adaptive Traffic Management System using C++ and SQLite, including real-time lane status 
+              visualization, adaptive lane decision display, and system performance evaluation. Also implemented the database callback function for displaying and 
+              analyzing stored traffic records.
 
 
