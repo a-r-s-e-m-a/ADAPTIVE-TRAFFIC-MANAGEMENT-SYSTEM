@@ -16,4 +16,8 @@ Mading Majok -ETS 1876/17
  CONTRIBUTION: I integrated SQLite into the C++ traffic system, designed lane data structures, and implemented synchronization functions to keep data consistent. 
                I also created the database schema for logging traffic states and added emergency and cycle tracking features to enhance traffic control.
 
+Betelhem Nurlachw  -ETS 0284/17
+CONTRIBUTION: Implemented all data logging — saves and loads live lane state to the database between cycles, inserts every traffic decision into the permanent
+             log with lane, vehicles, wait time, green time, and event type, and writes each cycle summary to an external text file for offline review.
+
 
