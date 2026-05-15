@@ -452,3 +452,117 @@ void run_cycle()
 
     cycle_number++;
 }
+
+bool all_clear()
+{
+    for(int i = 0; i < 4; i++)
+    {
+        if(vehicle_counts[i] > 0)
+            return false;
+    }
+    return true;
+}
+
+void auto_mode()
+{
+    input_traffic();
+
+    save_current_state();
+
+    char choice;
+
+    while(true)
+    {
+        for(int i = 0; i < 5; i++)
+        {
+            load_current_state();
+
+            if(all_clear())
+            {
+                cout << "\nALL LANES CLEARED - SYSTEM STOPPED\n";
+                return;
+            }
+
+            run_cycle();
+
+            save_current_state();
+
+            if(all_clear())
+            {
+                cout << "\nALL LANES CLEARED - SYSTEM STOPPED\n";
+                return;
+            }
+        }
+
+        cout << "\n5 CYCLES COMPLETED\n";
+
+        cout << "Continue another 5 cycles? (y/n): ";
+        cin >> choice;
+
+        if(choice != 'y')
+        {
+            cout << "\nAUTO MODE STOPPED BY USER\n";
+            return;
+        }
+    }
+}
+
+void manual_mode()
+{
+    char c;
+
+    do
+    {
+        input_traffic();
+        run_cycle();
+
+        cout << "\nContinue? (y/n): ";
+        cin >> c;
+
+    } while(c == 'y');
+}
+
+int main()
+{
+    db_connect();
+    db_create();
+
+    int choice;
+
+    cout << "\n====================================\n";
+    cout << " ADAPTIVE TRAFFIC MANAGEMENT SYSTEM\n";
+    cout << "====================================\n";
+
+    while(true)
+    {
+        cout << "\n1. AUTO MODE\n";
+        cout << "   -> Runs automatically\n";
+        cout << "   -> Stops every 5 cycles for confirmation\n";
+
+        cout << "\n2. MANUAL MODE\n";
+        cout << "   -> User enters traffic every cycle\n";
+
+        cout << "\n3. ANALYTICS DASHBOARD\n";
+        cout << "   -> Shows database reports\n";
+
+        cout << "\n4. EXIT\n";
+
+        cout << "\n====Choice: ";
+        cin >> choice;
+
+        if(choice == 1)
+            auto_mode();
+        else if(choice == 2)
+            manual_mode();
+        else if(choice == 3)
+            analytics_menu();
+        else
+            break;
+    }
+
+    sqlite3_close(database);
+
+    cout << "\nSystem Shutdown Complete\n";
+
+    return 0;
+}
