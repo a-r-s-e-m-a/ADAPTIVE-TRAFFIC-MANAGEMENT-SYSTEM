@@ -79,3 +79,58 @@ void db_create()
 
     sqlite3_exec(database, sql2.c_str(), nullptr, nullptr, nullptr);
 }
+void input_traffic()
+{
+    cout << "\n--- VEHICLE INPUT ---\n";
+
+    for(int i = 0; i < 4; i++)
+    {
+        cout << "Enter vehicles at " << lane_names[i] << ": ";
+        cin >> vehicle_counts[i];
+
+        history[i][history_index % 24] = vehicle_counts[i];
+    }
+
+    history_index++;
+
+    sync_struct();
+}
+
+void emergency_check()
+{
+    emergency = false;
+
+    for(int i = 0; i < 4; i++)
+    {
+        if(vehicle_counts[i] >= 40)
+        {
+            emergency = true;
+            emergency_lane = i;
+            return;
+        }
+    }
+}
+
+int decide_lane()
+{
+    if(emergency)
+        return emergency_lane;
+
+    int best = 0;
+
+    for(int i = 1; i < 4; i++)
+    {
+        if(vehicle_counts[i] > vehicle_counts[best])
+            best = i;
+    }
+
+    return best;
+}
+
+int green_time(int vehicles)
+{
+    if(vehicles > 40) return 60;
+    if(vehicles > 20) return 45;
+    return 30;
+}
+
