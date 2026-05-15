@@ -9,4 +9,7 @@ BETELHEM SOLOMON - ETS 0286/17
 BEREKET DERESE - ETS 0262/17 
   CONTRIBUTION: Lane Processing and Wait Time  Management- manages traffic lane data by updating vehicle counts, tracking wait times, checking empty lanes, 
                 and calculating total vehicles for efficient traffic control.
+AFOMIYA ASCHENAKI — ETS 0111/17
+  CONTRIBUTION: TRAFFIC INPUT & EMERGENCY MANAGEMENT
+
 
