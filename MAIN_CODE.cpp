@@ -324,3 +324,131 @@ int callback(void*, int col, char** data, char** colName)
     cout << endl;
     return 0;
 }
+void analytics_menu()
+{
+    sync_struct();
+
+    cout << "\n====================================\n";
+    cout << "       ANALYTICS DASHBOARD          \n";
+    cout << "====================================\n";
+
+    cout << "\n--- FULL TRAFFIC LOGS ---\n";
+    cout << "ID | LANE  | VEHICLES | WAIT(s) | GREEN(s) | EVENT     | CYCLE\n";
+    cout << "----------------------------------------------------------------\n";
+
+    sqlite3_exec(database,
+    "SELECT * FROM traffic_log;",
+    [](void*, int, char** d, char**) -> int
+    {
+        cout << d[0] << "  | "
+             << d[1] << "  | "
+             << d[2] << "        | "
+             << d[3] << "       | "
+             << d[4] << "       | "
+             << d[5] << "   | "
+             << d[6] << "\n";
+
+        return 0;
+    },
+    nullptr, nullptr);
+
+    cout << "\n--- AVERAGE VEHICLES PER LANE ---\n";
+    cout << "LANE  | AVG VEHICLES\n";
+    cout << "---------------------\n";
+
+    sqlite3_exec(database,
+    "SELECT lane, ROUND(AVG(vehicles),1) FROM traffic_log GROUP BY lane ORDER BY lane;",
+    [](void*, int, char** d, char**) -> int
+    {
+        cout << d[0] << " | " << d[1] << "\n";
+        return 0;
+    },
+    nullptr, nullptr);
+
+    cout << "\n--- BUSIEST LANE (RANKED) ---\n";
+    cout << "LANE  | MAX VEHICLES\n";
+    cout << "---------------------\n";
+
+    sqlite3_exec(database,
+    "SELECT lane, MAX(vehicles) FROM traffic_log GROUP BY lane ORDER BY MAX(vehicles) DESC;",
+    [](void*, int, char** d, char**) -> int
+    {
+        cout << d[0] << " | " << d[1] << "\n";
+        return 0;
+    },
+    nullptr, nullptr);
+
+    cout << "\n--- EMERGENCY EVENTS ---\n";
+    cout << "TOTAL: ";
+
+    sqlite3_exec(database,
+    "SELECT COUNT(*) FROM traffic_log WHERE event='EMERGENCY';",
+    [](void*, int, char** d, char**) -> int
+    {
+        cout << d[0] << "\n";
+        return 0;
+    },
+    nullptr, nullptr);
+}
+
+void run_cycle()
+{
+    cout << "\n====================\n";
+    cout << "CYCLE " << cycle_number << "\n";
+    cout << "====================\n";
+
+    update_wait_times();
+    emergency_check();
+
+    int lane = decide_lane();
+
+    if(lane == -1)
+    {
+        cout << "\nNO VEHICLES\n";
+        return;
+    }
+
+    int time = green_time(vehicle_counts[lane]);
+
+    cout << "\nGREEN LIGHT: " << lane_names[lane] << "\n";
+    cout << "Time: " << time << " sec\n";
+
+    db_insert(lane_names[lane],
+              vehicle_counts[lane],
+              wait_times[lane],
+              time,
+              emergency ? "EMERGENCY" : "NORMAL");
+
+    file_log_cycle(lane);
+
+    show_decision(lane);
+
+    for(int i = 0; i < 4; i++)
+    {
+        if(i != lane && vehicle_counts[i] > 0)
+        {
+            if(wait_times[i] == 0)
+                wait_times[i] = 1;
+            else
+                wait_times[i]++;
+        }
+    }
+
+    wait_times[lane] = 0;
+
+    vehicle_counts[lane] -= 20;
+
+    if(vehicle_counts[lane] < 0)
+        vehicle_counts[lane] = 0;
+
+    sync_struct();
+    sync_arrays();
+
+    show_status();
+
+    cout << "\nScore: " << performance_score() << "/100\n";
+
+    save_current_state();
+
+    cycle_number++;
+}
