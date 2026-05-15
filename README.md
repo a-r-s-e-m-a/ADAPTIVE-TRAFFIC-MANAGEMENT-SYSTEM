@@ -53,7 +53,7 @@ cycle_log.txt → readable cycle-by-cycle logs
 
 
 Tech used
-C++
-SQLite3
-File handling (fstream)
-Console-based interface
+1. C++
+2. SQLite3
+3. File handling (fstream)
+4. Console-based interface
