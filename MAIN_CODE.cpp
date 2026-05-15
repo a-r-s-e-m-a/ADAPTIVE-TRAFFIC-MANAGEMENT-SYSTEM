@@ -79,6 +79,76 @@ void db_create()
 
     sqlite3_exec(database, sql2.c_str(), nullptr, nullptr, nullptr);
 }
+
+void save_current_state()
+{
+    sqlite3_exec(database, "DELETE FROM current_state;", nullptr, nullptr, nullptr);
+
+    for(int i = 0; i < 4; i++)
+    {
+        string sql =
+        "INSERT INTO current_state VALUES('"
+        + lane_names[i] + "',"
+        + to_string(vehicle_counts[i]) + ","
+        + to_string(wait_times[i]) + ");";
+
+        sqlite3_exec(database, sql.c_str(), nullptr, nullptr, nullptr);
+    }
+}
+
+int load_index = 0;
+
+int load_callback(void*, int, char** data, char**)
+{
+    if(data[0] && data[1] && data[2])
+    {
+        vehicle_counts[load_index] = stoi(data[1]);
+        wait_times[load_index] = stoi(data[2]);
+    }
+
+    load_index++;
+    return 0;
+}
+
+void load_current_state()
+{
+    load_index = 0;
+
+    sqlite3_exec(database,
+                 "SELECT * FROM current_state;",
+                 load_callback,
+                 nullptr,
+                 nullptr);
+}
+
+void db_insert(string lane, int vehicles, int wait, int green, string event)
+{
+    string sql =
+    "INSERT INTO traffic_log VALUES(NULL,'"
+    + lane + "',"
+    + to_string(vehicles) + ","
+    + to_string(wait) + ","
+    + to_string(green) + ",'"
+    + event + "',"
+    + to_string(cycle_number) + ");";
+
+    sqlite3_exec(database, sql.c_str(), nullptr, nullptr, nullptr);
+}
+
+void file_log_cycle(int lane)
+{
+    ofstream file("cycle_log.txt", ios::app);
+
+    file << "Cycle: " << cycle_number << "\n";
+    file << "Lane: " << lane_names[lane] << "\n";
+    file << "Vehicles: " << vehicle_counts[lane] << "\n";
+    file << "Wait: " << wait_times[lane] << "\n";
+    file << "Emergency: " << (emergency ? "YES" : "NO") << "\n";
+    file << "----------------------\n";
+
+    file.close();
+}
+
 void input_traffic()
 {
     cout << "\n--- VEHICLE INPUT ---\n";
