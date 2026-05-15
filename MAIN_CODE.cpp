@@ -1,4 +1,4 @@
-#include <iostream>
+d#include <iostream>
 #include <string>
 #include <fstream>
 #include <iomanip>
@@ -132,5 +132,68 @@ int green_time(int vehicles)
     if(vehicles > 40) return 60;
     if(vehicles > 20) return 45;
     return 30;
+}
+void update_wait_times()
+{
+    for(int i = 0; i < 4; i++)
+    {
+        if(vehicle_counts[i] == 0)
+            wait_times[i] = 0;
+    }
+}
+
+void update_lane(int lane)
+{
+    vehicle_counts[lane] -= 20;
+
+    if(vehicle_counts[lane] < 0)
+        vehicle_counts[lane] = 0;
+
+    wait_times[lane] = 0;
+
+    sync_struct();
+    sync_arrays();
+}
+
+void increase_wait()
+{
+    for(int i = 0; i < 4; i++)
+    {
+        if(vehicle_counts[i] > 0)
+        {
+            if(wait_times[i] == 0)
+                wait_times[i] = 1;
+            else
+                wait_times[i]++;
+        }
+    }
+}
+
+void reset_lane_wait(int lane)
+{
+    wait_times[lane] = 0;
+}
+
+void reduce_vehicles(int lane)
+{
+    vehicle_counts[lane] -= 20;
+
+    if(vehicle_counts[lane] < 0)
+        vehicle_counts[lane] = 0;
+}
+
+bool lane_empty(int lane)
+{
+    return vehicle_counts[lane] == 0;
+}
+
+int total_vehicles()
+{
+    int total = 0;
+
+    for(int i = 0; i < 4; i++)
+        total += vehicle_counts[i];
+
+    return total;
 }
 
