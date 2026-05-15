@@ -11,5 +11,8 @@ BEREKET DERESE - ETS 0262/17
                 and calculating total vehicles for efficient traffic control.
 AFOMIYA ASCHENAKI — ETS 0111/17
   CONTRIBUTION: TRAFFIC INPUT & EMERGENCY MANAGEMENT
+Mading Majok -ETS 1876/17
+ CONTRIBUTION: I integrated SQLite into the C++ traffic system, designed lane data structures, and implemented synchronization functions to keep data consistent. 
+               I also created the database schema for logging traffic states and added emergency and cycle tracking features to enhance traffic control.
 
 
